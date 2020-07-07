@@ -33,8 +33,30 @@ const http = require('http');
  * SERVER
  */
 
+// Top level code only excuted once
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObj = JSON.parse(data);
+
+// callbacks excuted over and over again
 const server = http.createServer((req, res) => {
-    res.end('Hello from the server!');
+    const pathName = req.url;
+    
+    if(pathName === '/' || pathName === '/overview'){
+        res.end('This is the OVERVIEW')
+    } else if(pathName === '/product'){
+        res.end('This is the PRODUCT')
+    } else if (pathName === '/api') {
+        fs.readFile(`${__dirname}/dev-data/data.json`, 'utf-8', (err, data) => {
+            res.writeHead(200, { 'Content-type': 'application/json'});
+            res.end(data);
+        })
+    } else {
+        res.writeHead(404, {
+	        'Content-type': 'text/html',
+            'my-own-header': 'hello-world'
+        })
+        res.end('Page not found!')
+    }
 });
 
 server.listen(8000, '127.0.0.1', () => {
