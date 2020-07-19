@@ -33,7 +33,6 @@ const replaceTemplate = require('./modules/replaceTemplate');
 // console.log('Will read file!');
 
 
-
 /******
  * SERVER
  */
