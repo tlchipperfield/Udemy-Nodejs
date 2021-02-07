@@ -7,11 +7,9 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'A username is needed'],
-    unique: true,
     trim: true,
     maxlength: [16, 'A username must have less or equal then 16 character'],
     minlength: [5, 'A username must have more or equal then 5 character'],
-    // validate: [validator.isAlpha, 'Tour name must only contain characters.'],
   },
   email: {
     type: String,
