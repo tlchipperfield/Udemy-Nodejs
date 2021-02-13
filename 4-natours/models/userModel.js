@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
     maxlength: [30, 'A 30 character limit is allowed.'],
   },
   photo: String,
+  role: {
+    type: String,
+    enum: ['user', 'guide', 'lead-guide', 'admin'],
+    default: 'user',
+  },
   password: {
     type: String,
     required: [true, 'A password is required'],
