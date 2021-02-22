@@ -5,7 +5,6 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
-const { now } = require('mongoose');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -27,7 +26,7 @@ const createSendToken = (user, statusCode, res) => {
 
   // remove password from cookie
   user.password = undefined;
-  
+
   res.status(statusCode).json({
     status: 'success',
     token,
