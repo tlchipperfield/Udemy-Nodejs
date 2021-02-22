@@ -183,6 +183,4 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-// push this stupid comment
-// push another stupid comment
-// pushed another stupid comment
+// deleted crap
