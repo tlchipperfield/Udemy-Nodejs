@@ -43,9 +43,9 @@ reviewSchema.pre(/^find/, function (next) {
   // });
 
   this.populate({
-        path: 'user',
-        select: 'name photo',
-      });
+    path: 'user',
+    select: 'name photo',
+  });
   next();
 });
 
@@ -57,3 +57,7 @@ reviewSchema.pre('aggregate', function (next) {
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
+
+// POST /tour/%id/reviews
+// GET /tour/%id/reviews
+// GET /tour/%id/reviews/%id
