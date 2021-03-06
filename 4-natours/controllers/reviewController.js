@@ -39,6 +39,24 @@ exports.createReview = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.updateReview = catchAsync(async (req, res, next) => {
+  const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!review) {
+    return next(new AppError('No review was found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      review,
+    },
+  });
+});
+
 exports.deleteReview = catchAsync(async (req, res, next) => {
   const review = await Review.findByIdAndDelete(req.params.id);
   if (!review) {
@@ -48,5 +66,29 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'deleted review',
     data: null,
+  });
+});
+
+exports.getReviewStats = catchAsync(async (req, res, next) => {
+  const stats = await Review.aggregate([
+    {
+      $match: { rating: { $gte: 1 } },
+    },
+    {
+      $group: {
+        _id: '$tour',
+        num: { $sum: 1 },
+        avgRatings: { $avg: '$rating' },
+      },
+    },
+    {
+      $sort: { rating: 1 },
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      stats,
+    },
   });
 });
