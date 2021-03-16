@@ -80,13 +80,16 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError(`You're not logged in! Please log in to get access.`, 401)
     );
   }
+
   // 2) Verification token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
   // 3) Check if user still exists
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
     return next(new AppError('The user to this token no longer exists', 401));
   }
+
   // 4) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
@@ -118,9 +121,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('There is no user with that email', 404));
   }
+
   // 2) Generate the random reset token and
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
+
   // 3) Send it to the user's email
   const resetURL = `${req.protocol}://${req.get(
     'host'
@@ -163,6 +168,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
   });
+
   // 2) If token has not expired, and there is user, set the new password
   if (!user) {
     return next(new AppError('Token is invalid or has expired', 400));
